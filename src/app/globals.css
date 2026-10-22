@@ -1,0 +1,551 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+/* ============================================
+   Andes Talleres Futsal - Design System
+   ============================================ */
+
+@theme {
+  /* Club palette */
+  --color-navy: #0A1230;
+  --color-navy-light: #111B42;
+  --color-navy-lighter: #1A2654;
+  --color-blue-shield: #1C2E7A;
+  --color-blue-bright: #2B45A8;
+  --color-red-shield: #D01F2E;
+  --color-red-hover: #E8283A;
+  --color-red-dark: #A81825;
+  --color-white: #FFFFFF;
+  --color-gray-blue: #9AA6C8;
+  --color-gray-dark: #6B7AA0;
+  --color-green-valid: #22C55E;
+  --color-yellow-warn: #F59E0B;
+
+  /* Fonts */
+  --font-montserrat: 'Montserrat', sans-serif;
+}
+
+/* ============================================
+   Base & Global Styles
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-montserrat);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-navy);
+  color: var(--color-white);
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* ============================================
+   Stadium Lights Background
+   ============================================ */
+
+.stadium-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.stadium-bg::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -10%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(ellipse, rgba(28, 46, 122, 0.35) 0%, transparent 70%);
+  filter: blur(80px);
+}
+
+.stadium-bg::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  right: -15%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(ellipse, rgba(208, 31, 46, 0.2) 0%, transparent 70%);
+  filter: blur(80px);
+}
+
+/* Court lines pattern */
+.court-pattern {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image:
+    /* Center circle */
+    radial-gradient(circle at 50% 50%, transparent 120px, var(--color-white) 120px, var(--color-white) 122px, transparent 122px),
+    /* Center line */
+    linear-gradient(to right, transparent calc(50% - 1px), var(--color-white) calc(50% - 1px), var(--color-white) calc(50% + 1px), transparent calc(50% + 1px)),
+    /* Top area */
+    linear-gradient(to bottom, var(--color-white) 1px, transparent 1px),
+    /* Side lines */
+    linear-gradient(to right, var(--color-white) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    100% 200px,
+    200px 100%;
+  background-position: center center;
+  background-repeat: no-repeat, no-repeat, repeat-y, repeat-x;
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+.text-gradient-club {
+  background: linear-gradient(135deg, var(--color-white) 0%, var(--color-gray-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass-card {
+  background: linear-gradient(135deg, rgba(26, 38, 84, 0.6) 0%, rgba(10, 18, 48, 0.8) 100%);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(28, 46, 122, 0.4);
+  border-radius: 16px;
+}
+
+.glass-card-hover {
+  transition: all 0.3s ease;
+}
+
+.glass-card-hover:hover {
+  border-color: rgba(43, 69, 168, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(28, 46, 122, 0.3);
+}
+
+/* ============================================
+   Match Card - Ticket Style
+   ============================================ */
+
+.match-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(26, 38, 84, 0.7) 0%, rgba(10, 18, 48, 0.9) 100%);
+  border: 1px solid rgba(28, 46, 122, 0.5);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.match-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, var(--color-blue-shield), var(--color-red-shield));
+}
+
+.match-card.low-stock::before {
+  background: var(--color-red-shield);
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.match-card-featured {
+  border-color: rgba(208, 31, 46, 0.4);
+  box-shadow: 0 0 40px rgba(208, 31, 46, 0.15), 0 0 80px rgba(28, 46, 122, 0.1);
+}
+
+/* Perforated edge effect */
+.ticket-perforation {
+  position: relative;
+}
+
+.ticket-perforation::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 6px,
+    rgba(10, 18, 48, 0.8) 6px,
+    rgba(10, 18, 48, 0.8) 12px
+  );
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+
+.btn-primary {
+  background-color: var(--color-red-shield);
+  color: var(--color-white);
+  font-family: var(--font-montserrat);
+  font-weight: 700;
+  padding: 14px 28px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-red-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(208, 31, 46, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-white);
+  font-family: var(--font-montserrat);
+  font-weight: 600;
+  padding: 14px 28px;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  width: 100%;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ============================================
+   Form Inputs
+   ============================================ */
+
+.input-field {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(26, 38, 84, 0.5);
+  border: 1px solid rgba(28, 46, 122, 0.5);
+  border-radius: 12px;
+  color: var(--color-white);
+  font-family: var(--font-montserrat);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.input-field::placeholder {
+  color: var(--color-gray-dark);
+}
+
+.input-field:focus {
+  border-color: var(--color-blue-bright);
+  box-shadow: 0 0 0 3px rgba(43, 69, 168, 0.2);
+}
+
+.input-field.error {
+  border-color: var(--color-red-shield);
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-gray-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input-error {
+  color: var(--color-red-shield);
+  font-size: 0.8rem;
+  margin-top: 4px;
+}
+
+/* ============================================
+   Ticket Display (QR Entry)
+   ============================================ */
+
+.ticket-display {
+  background: var(--color-white);
+  border-radius: 16px;
+  overflow: hidden;
+  color: var(--color-navy);
+}
+
+.ticket-display-header {
+  background: linear-gradient(135deg, var(--color-blue-shield) 0%, var(--color-navy) 100%);
+  color: var(--color-white);
+  padding: 20px;
+  text-align: center;
+}
+
+.ticket-display-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.ticket-display-qr {
+  padding: 16px;
+  background: var(--color-white);
+  border-radius: 8px;
+  border: 2px solid #e5e7eb;
+}
+
+.ticket-display-code {
+  font-family: var(--font-montserrat);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--color-navy);
+}
+
+/* ============================================
+   Badge
+   ============================================ */
+
+.badge-last-tickets {
+  background: rgba(208, 31, 46, 0.2);
+  color: var(--color-red-shield);
+  font-weight: 700;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.badge-competition {
+  background: rgba(28, 46, 122, 0.3);
+  color: var(--color-gray-blue);
+  font-weight: 600;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ============================================
+   Quantity Selector
+   ============================================ */
+
+.qty-selector {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid rgba(28, 46, 122, 0.5);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.qty-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 38, 84, 0.5);
+  color: var(--color-white);
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 700;
+  transition: background 0.15s ease;
+}
+
+.qty-btn:hover:not(:disabled) {
+  background: rgba(43, 69, 168, 0.5);
+}
+
+.qty-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.qty-value {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: rgba(10, 18, 48, 0.5);
+}
+
+/* ============================================
+   Scan Result
+   ============================================ */
+
+.scan-valid {
+  background: rgba(34, 197, 94, 0.15);
+  border: 2px solid var(--color-green-valid);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+.scan-used {
+  background: rgba(245, 158, 11, 0.15);
+  border: 2px solid var(--color-yellow-warn);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+.scan-invalid {
+  background: rgba(208, 31, 46, 0.15);
+  border: 2px solid var(--color-red-shield);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease forwards;
+}
+
+/* Staggered entrance for list items */
+.stagger-item {
+  opacity: 0;
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0ms; }
+.stagger-item:nth-child(2) { animation-delay: 80ms; }
+.stagger-item:nth-child(3) { animation-delay: 160ms; }
+.stagger-item:nth-child(4) { animation-delay: 240ms; }
+.stagger-item:nth-child(5) { animation-delay: 320ms; }
+
+/* ============================================
+   Accessibility
+   ============================================ */
+
+:focus-visible {
+  outline: 2px solid var(--color-blue-bright);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Scrollbar
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-navy);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-navy-lighter);
+  border-radius: 3px;
+}
+
+/* ============================================
+   Loading spinner
+   ============================================ */
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--color-white);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner-large {
+  width: 48px;
+  height: 48px;
+  border-width: 4px;
+}

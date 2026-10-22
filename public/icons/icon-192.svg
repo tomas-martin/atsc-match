@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="24" fill="#0A1230"/>
+  <g transform="translate(46, 22)">
+    <defs>
+      <clipPath id="s">
+        <path d="M50 2 L95 20 L95 70 Q95 95 50 118 Q5 95 5 70 L5 20 Z"/>
+      </clipPath>
+    </defs>
+    <g clip-path="url(#s)">
+      <rect x="0" y="0" width="100" height="120" fill="#1C2E7A"/>
+      <rect x="5" y="0" width="15" height="120" fill="#1C2E7A"/>
+      <rect x="20" y="0" width="15" height="120" fill="#D01F2E"/>
+      <rect x="35" y="0" width="15" height="120" fill="#1C2E7A"/>
+      <rect x="50" y="0" width="15" height="120" fill="#D01F2E"/>
+      <rect x="65" y="0" width="15" height="120" fill="#1C2E7A"/>
+      <rect x="80" y="0" width="15" height="120" fill="#D01F2E"/>
+      <circle cx="50" cy="55" r="22" fill="rgba(255,255,255,0.95)"/>
+    </g>
+    <path d="M50 2 L95 20 L95 70 Q95 95 50 118 Q5 95 5 70 L5 20 Z" fill="none" stroke="#FFFFFF" stroke-width="2.5"/>
+    <text x="50" y="62" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="22" fill="#0A1230">AT</text>
+    <text x="50" y="75" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="7" fill="#0A1230" letter-spacing="2">FUTSAL</text>
+  </g>
+</svg>
