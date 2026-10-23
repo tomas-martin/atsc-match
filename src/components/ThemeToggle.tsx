@@ -16,9 +16,11 @@ export default function ThemeToggle() {
           window.matchMedia('(prefers-color-scheme: dark)').matches);
 
     const initial = isDark ? 'dark' : 'light';
-    setTheme(initial);
     applyTheme(initial);
-    setMounted(true);
+    queueMicrotask(() => {
+      setTheme(initial);
+      setMounted(true);
+    });
   }, []);
 
   function applyTheme(newTheme: 'dark' | 'light') {

@@ -24,11 +24,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'DNI inválido' }, { status: 400 });
     }
 
-    const totalItems = items.reduce((s: number, i: { quantity: number }) => s + i.quantity, 0);
-    if (totalItems > 6) {
-      return NextResponse.json({ error: 'Máximo 6 entradas por compra' }, { status: 400 });
-    }
-
     const supabase = createServerClient();
 
     // Verify match exists

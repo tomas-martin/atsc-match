@@ -3,14 +3,14 @@ import "./globals.css";
 import PWAInstaller from "@/components/PWAInstaller";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://atsc-match-beta.vercel.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://atsc-match.vercel.app'),
   title: "Andes Talleres Futsal | Entradas Oficiales",
   description: "Comprá tus entradas online para los partidos de Andes Talleres Futsal. Mendoza, Argentina. #SomosTalleres #ElMatador",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/Talleres_Futsal.png",
-    shortcut: "/Talleres_Futsal.png",
-    apple: "/Talleres_Futsal.png",
+    icon: "/icons/icon-192.png",
+    shortcut: "/icons/icon-192.png",
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
     title: "Andes Talleres Futsal | Venta de Entradas",

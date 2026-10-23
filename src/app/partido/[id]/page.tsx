@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import type { MatchWithTicketTypes } from '@/lib/types';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import MatchDetail from './MatchDetail';
+import TicketSelector from './TicketSelector';
 
 export const dynamic = 'force-dynamic';
 
@@ -48,7 +48,7 @@ export default async function PartidoPage({ params }: PageProps) {
     <>
       <Header />
       <main className="flex-1 px-4 py-6 max-w-lg mx-auto w-full">
-        <MatchDetail match={match} />
+        <TicketSelector match={match} />
       </main>
       <Footer />
     </>

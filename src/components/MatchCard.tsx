@@ -12,6 +12,8 @@ import {
   getAvailable,
 } from '@/lib/utils';
 import ClubShield from './ClubShield';
+import RivalShield from './RivalShield';
+import TournamentLogo from './TournamentLogo';
 
 interface MatchCardProps {
   match: MatchWithTicketTypes;
@@ -50,7 +52,7 @@ export default function MatchCard({ match, featured = false }: MatchCardProps) {
         <div className="flex items-center justify-between px-6 pt-5 pb-2">
           <div className="flex items-center gap-2">
             <span className="badge-competition">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+              <TournamentLogo competitionName={match.competition} size={16} />
               {match.competition}
             </span>
           </div>
@@ -101,18 +103,21 @@ export default function MatchCard({ match, featured = false }: MatchCardProps) {
                 </span>
               </div>
 
-              {/* Rival info */}
-              <div className="flex-1 min-w-0">
-                <h3
-                  className={`font-black truncate tracking-tight text-[var(--text-primary)] group-hover:text-blue-500 transition-colors ${
-                    featured ? 'text-lg sm:text-xl' : 'text-base'
-                  }`}
-                >
-                  {match.rival}
-                </h3>
-                <p className="text-xs text-[var(--text-muted)] font-medium">
-                  {match.rival.toLowerCase().includes('club') ? 'Mendoza' : 'Futsal'}
-                </p>
+              {/* Rival info with crest */}
+              <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                <RivalShield rivalName={match.rival} size={featured ? 38 : 32} />
+                <div className="min-w-0">
+                  <h3
+                    className={`font-black truncate tracking-tight text-[var(--text-primary)] group-hover:text-blue-500 transition-colors ${
+                      featured ? 'text-lg sm:text-xl' : 'text-base'
+                    }`}
+                  >
+                    {match.rival}
+                  </h3>
+                  <p className="text-[10px] text-[var(--text-muted)] font-bold uppercase tracking-wider">
+                    Visitante
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -146,7 +151,7 @@ export default function MatchCard({ match, featured = false }: MatchCardProps) {
           <div className="px-6 py-3.5 bg-[var(--bg-surface-elevated)] border-t border-[var(--border-subtle)] flex items-center justify-between">
             <div>
               <span className="text-[11px] uppercase tracking-wider font-bold text-[var(--text-muted)] block">
-                Entradas desde
+                Entrada
               </span>
               <span className="font-black text-lg text-[var(--text-primary)]">
                 {formatPrice(minPrice)}

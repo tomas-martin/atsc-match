@@ -1,4 +1,4 @@
-const CACHE_NAME = 'atsc-entradas-v1';
+const CACHE_NAME = 'atsc-entradas-v2';
 const SHELL_ASSETS = [
   '/',
   '/mis-entradas',
@@ -36,8 +36,8 @@ self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;
 
-  // API requests: network only
-  if (url.pathname.startsWith('/api/')) return;
+  // API and Next.js internal chunks: bypass SW cache completely
+  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/_next/')) return;
 
   // For navigation requests (pages): network first, fall back to cache
   if (event.request.mode === 'navigate') {

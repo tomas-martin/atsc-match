@@ -27,6 +27,14 @@ export default function Header() {
         {/* Actions navigation */}
         <div className="flex items-center gap-2">
           <Link
+            href="/partidos"
+            className="btn-pill"
+            title="Ver cartelera de partidos"
+          >
+            <span>Partidos</span>
+          </Link>
+
+          <Link
             href="/mis-entradas"
             className="btn-pill"
             title="Buscar mis entradas compradas"
