@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
+import jsQR from 'jsqr';
 
 type ScanResult = {
   status: 'valid' | 'used' | 'invalid';
@@ -40,25 +41,39 @@ export default function AdminEscanearPage() {
     setCameraError('');
     setLastScannedToken('');
 
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } },
-      });
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setCameraError('Tu navegador no soporta acceso a la cámara o requiere conexión segura HTTPS.');
+      return;
+    }
 
+    try {
+      const constraints: MediaStreamConstraints = {
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+        audio: false,
+      };
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        videoRef.current.setAttribute('playsinline', 'true');
+        videoRef.current.setAttribute('muted', 'true');
+        videoRef.current.muted = true;
         await videoRef.current.play();
       }
       setScanning(true);
 
-      // Start scanning loop
+      // Start scanning loop every 200ms
       scanIntervalRef.current = setInterval(() => {
         scanFrame();
-      }, 300);
+      }, 200);
     } catch (err) {
       console.error('Camera error:', err);
-      setCameraError('No se pudo acceder a la cámara. Verificá los permisos.');
+      setCameraError('No se pudo acceder a la cámara. Verificá los permisos del navegador.');
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -67,16 +82,13 @@ export default function AdminEscanearPage() {
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx || video.readyState !== 4) return;
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    ctx.drawImage(video, 0, 0);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Use BarcodeDetector on canvas to scan QR
-    // We'll try to decode any text that looks like a base64url token
-    // For actual QR scanning, we'll use the canvas and post to a decoder
     try {
       decodeQR();
     } catch {
@@ -85,26 +97,26 @@ export default function AdminEscanearPage() {
   }
 
   async function decodeQR() {
-    // We'll post the image data to check for QR codes using a canvas-based approach
-    // Since jsQR needs to be imported, we'll use a different strategy:
-    // Try to use BarcodeDetector API (available in modern Chrome/Edge)
-    if ('BarcodeDetector' in window) {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const detector = new (window as any).BarcodeDetector({ formats: ['qr_code'] });
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const barcodes = await detector.detect(canvas);
-        if (barcodes.length > 0) {
-          const token = barcodes[0].rawValue;
-          if (token && token !== lastScannedToken) {
-            setLastScannedToken(token);
-            await validateToken(token);
-          }
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    if (!ctx || canvas.width === 0 || canvas.height === 0) return;
+
+    try {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: 'dontInvert',
+      });
+
+      if (code && code.data) {
+        const token = code.data.trim();
+        if (token && token !== lastScannedToken) {
+          setLastScannedToken(token);
+          await validateToken(token);
         }
-      } catch {
-        // BarcodeDetector failed, fall back to manual entry
       }
+    } catch {
+      // Ignore scan frame error
     }
   }
 

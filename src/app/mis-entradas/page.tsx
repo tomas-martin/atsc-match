@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import TicketDisplay from '@/components/TicketDisplay';
-import { isValidEmail, isValidDNI, sanitizeDNI } from '@/lib/utils';
+import { isValidDNI, sanitizeDNI } from '@/lib/utils';
 
 interface TicketData {
   id: string;
@@ -18,7 +18,6 @@ interface TicketData {
 }
 
 export default function MisEntradasPage() {
-  const [email, setEmail] = useState('');
   const [dni, setDni] = useState('');
   const [tickets, setTickets] = useState<TicketData[]>([]);
   const [searched, setSearched] = useState(false);
@@ -27,7 +26,6 @@ export default function MisEntradasPage() {
 
   async function handleSearch() {
     const errs: Record<string, string> = {};
-    if (!isValidEmail(email)) errs.email = 'Ingresá un email válido';
     if (!isValidDNI(sanitizeDNI(dni))) errs.dni = 'Ingresá un DNI válido (7 u 8 dígitos)';
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
@@ -38,7 +36,6 @@ export default function MisEntradasPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: email.trim().toLowerCase(),
           dni: sanitizeDNI(dni),
         }),
       });
@@ -51,7 +48,7 @@ export default function MisEntradasPage() {
       if ('caches' in window) {
         try {
           const cache = await caches.open('mis-entradas-v1');
-          const cacheKey = `tickets-${email.trim().toLowerCase()}-${sanitizeDNI(dni)}`;
+          const cacheKey = `tickets-${sanitizeDNI(dni)}`;
           await cache.put(
             cacheKey,
             new Response(JSON.stringify(data.tickets || []))
@@ -65,7 +62,7 @@ export default function MisEntradasPage() {
       if ('caches' in window) {
         try {
           const cache = await caches.open('mis-entradas-v1');
-          const cacheKey = `tickets-${email.trim().toLowerCase()}-${sanitizeDNI(dni)}`;
+          const cacheKey = `tickets-${sanitizeDNI(dni)}`;
           const cached = await cache.match(cacheKey);
           if (cached) {
             const cachedTickets = await cached.json();
@@ -96,27 +93,12 @@ export default function MisEntradasPage() {
               Mis Entradas
             </h1>
             <p className="text-[var(--text-secondary)] text-sm max-w-xs mx-auto mt-1">
-              Ingresá el email y DNI que usaste al comprar para ver y descargar tus pases QR.
+              Ingresá tu número de DNI para ver y descargar tus entradas con código QR.
             </p>
           </div>
 
           <div className="bg-[var(--bg-surface)] border border-[var(--border-card)] rounded-2xl p-6 mb-8 shadow-sm">
             <div className="space-y-4">
-              <div>
-                <label htmlFor="search-email" className="input-label">
-                  Email de compra
-                </label>
-                <input
-                  id="search-email"
-                  type="email"
-                  className={`input-field ${errors.email ? 'error' : ''}`}
-                  placeholder="ejemplo@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                {errors.email && <p className="input-error">{errors.email}</p>}
-              </div>
-
               <div>
                 <label htmlFor="search-dni" className="input-label">
                   DNI del titular
@@ -126,9 +108,10 @@ export default function MisEntradasPage() {
                   type="text"
                   inputMode="numeric"
                   className={`input-field ${errors.dni ? 'error' : ''}`}
-                  placeholder="12345678"
+                  placeholder="Ej: 38123456"
                   value={dni}
                   onChange={(e) => setDni(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 />
                 {errors.dni && <p className="input-error">{errors.dni}</p>}
               </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import type { MatchWithTicketTypes } from '@/lib/types';
 import {
   formatDate,
@@ -27,7 +27,6 @@ interface CartItem {
 }
 
 export default function CheckoutContent({ match }: CheckoutContentProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [buyerName, setBuyerName] = useState('');
@@ -44,8 +43,10 @@ export default function CheckoutContent({ match }: CheckoutContentProps) {
       try {
         const parsed = JSON.parse(decodeURIComponent(queryItems));
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setCart(parsed);
-          setReady(true);
+          queueMicrotask(() => {
+            setCart(parsed);
+            setReady(true);
+          });
           return;
         }
       } catch {
@@ -59,8 +60,10 @@ export default function CheckoutContent({ match }: CheckoutContentProps) {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setCart(parsed);
-          setReady(true);
+          queueMicrotask(() => {
+            setCart(parsed);
+            setReady(true);
+          });
           return;
         }
       }
@@ -68,7 +71,7 @@ export default function CheckoutContent({ match }: CheckoutContentProps) {
       // Ignore
     }
 
-    setReady(true);
+    queueMicrotask(() => setReady(true));
   }, [match.id, searchParams]);
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);

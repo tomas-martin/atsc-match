@@ -154,9 +154,15 @@ export async function POST(req: NextRequest) {
       .update({ mp_preference_id: mpPref.id })
       .eq('id', order.id);
 
+    // Use sandbox_init_point if using test credentials (TEST-...)
+    const isTestToken = process.env.MP_ACCESS_TOKEN?.startsWith('TEST-');
+    const paymentUrl = isTestToken && mpPref.sandbox_init_point
+      ? mpPref.sandbox_init_point
+      : (mpPref.init_point || mpPref.sandbox_init_point);
+
     return NextResponse.json({
       orderId: order.id,
-      init_point: mpPref.init_point,
+      init_point: paymentUrl,
     });
   } catch (error) {
     console.error('Checkout error:', error);

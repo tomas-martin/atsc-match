@@ -3,20 +3,20 @@ import { createServerClient } from '@/lib/supabase/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, dni } = await req.json();
+    const { dni } = await req.json();
 
-    if (!email || !dni) {
-      return NextResponse.json({ error: 'Email y DNI requeridos' }, { status: 400 });
+    if (!dni) {
+      return NextResponse.json({ error: 'DNI requerido' }, { status: 400 });
     }
 
+    const cleanDni = dni.replace(/\./g, '').trim();
     const supabase = createServerClient();
 
-    // Find orders by email + DNI
+    // Find orders by DNI
     const { data: orders } = await supabase
       .from('orders')
       .select('*')
-      .eq('buyer_email', email.trim().toLowerCase())
-      .eq('buyer_dni', dni.replace(/\./g, '').trim())
+      .eq('buyer_dni', cleanDni)
       .eq('status', 'approved')
       .order('created_at', { ascending: false });
 
