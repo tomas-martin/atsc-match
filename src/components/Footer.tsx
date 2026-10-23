@@ -1,7 +1,15 @@
+'use client';
+
 import Link from 'next/link';
 import ClubShield from './ClubShield';
 
 export default function Footer() {
+  function handleTriggerInstall() {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('trigger-pwa-install'));
+    }
+  }
+
   return (
     <footer className="mt-auto border-t border-[var(--border-subtle)] bg-[var(--bg-header)] backdrop-blur-md py-8 px-4 transition-colors">
       <div className="max-w-xl mx-auto flex flex-col items-center gap-4 text-center">
@@ -20,6 +28,15 @@ export default function Footer() {
             #SomosTalleres · #ElMatador
           </p>
         </div>
+
+        {/* Instalar App en celular */}
+        <button
+          onClick={handleTriggerInstall}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 font-bold text-xs transition-all border border-blue-500/20 active:scale-95 cursor-pointer"
+        >
+          <span>📱</span>
+          <span>Instalar App en tu celular</span>
+        </button>
 
         <div className="flex items-center gap-4 text-xs font-semibold text-[var(--text-muted)]">
           <Link href="/" className="hover:text-[var(--text-primary)] transition-colors">
