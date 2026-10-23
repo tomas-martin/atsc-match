@@ -62,12 +62,12 @@ export default function ConfirmacionContent() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 animate-fade-in-up">
-        <div className="spinner spinner-large mb-4" />
-        <p className="text-gray-blue text-center">
+      <div className="flex flex-col items-center justify-center py-20 animate-fade-in-up text-center">
+        <div className="spinner mb-4 text-rose-500" />
+        <p className="text-[var(--text-secondary)] font-semibold text-sm">
           {retryCount > 0
-            ? 'Esperando confirmación del pago...'
-            : 'Cargando tu compra...'}
+            ? 'Esperando confirmación del pago en Mercado Pago...'
+            : 'Cargando tus entradas oficiales...'}
         </p>
       </div>
     );
@@ -75,23 +75,13 @@ export default function ConfirmacionContent() {
 
   if (error || !data) {
     return (
-      <div className="text-center py-20 animate-fade-in-up">
-        <div className="text-5xl mb-4">😕</div>
-        <h2 className="font-bold text-xl mb-2">{error || 'Error'}</h2>
-        <Link href="/" className="btn-secondary !w-auto inline-flex mt-4">
-          Volver al inicio
-        </Link>
-      </div>
-    );
-  }
-
-  if (pending || data.order.status === 'pending') {
-    return (
-      <div className="text-center py-16 animate-fade-in-up">
-        <div className="text-5xl mb-4">⏳</div>
-        <h2 className="font-bold text-xl mb-2">Pago pendiente</h2>
-        <p className="text-gray-blue text-sm mb-6">
-          Tu pago está siendo procesado. Las entradas se generarán cuando se confirme.
+      <div className="text-center py-16 px-4 bg-[var(--bg-surface)] border border-[var(--border-card)] rounded-2xl animate-fade-in-up">
+        <div className="text-4xl mb-3">😕</div>
+        <h2 className="font-black text-xl mb-2 text-[var(--text-primary)]">
+          {error || 'Error'}
+        </h2>
+        <p className="text-[var(--text-secondary)] text-sm mb-6 max-w-xs mx-auto">
+          No pudimos localizar la compra. Si pagaste recientemente, revisá tu casilla de email.
         </p>
         <Link href="/" className="btn-secondary !w-auto inline-flex">
           Volver al inicio
@@ -100,44 +90,66 @@ export default function ConfirmacionContent() {
     );
   }
 
+  if (pending || data.order.status === 'pending') {
+    return (
+      <div className="text-center py-16 px-4 bg-[var(--bg-surface)] border border-[var(--border-card)] rounded-2xl animate-fade-in-up">
+        <div className="text-4xl mb-3">⏳</div>
+        <h2 className="font-black text-xl mb-2 text-[var(--text-primary)]">
+          Pago en proceso
+        </h2>
+        <p className="text-[var(--text-secondary)] text-sm mb-6 max-w-xs mx-auto">
+          Tu pago se está acreditando. En cuanto Mercado Pago nos notifique, tus entradas aparecerán acá y en tu email.
+        </p>
+        <Link href="/mis-entradas" className="btn-secondary !w-auto inline-flex">
+          Buscar en Mis Entradas
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="animate-fade-in-up">
-      {/* Success header */}
+      {/* Success Hero Header */}
       <div className="text-center mb-8">
-        <div className="text-5xl mb-3">🎉</div>
-        <h1 className="font-black text-2xl mb-2">¡Compra confirmada!</h1>
-        <p className="text-gray-blue text-sm">
-          Hola {data.order.buyer_name}, tus entradas están listas.
-          <br />
-          Mostrá el QR en la puerta del estadio.
+        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-3xl">
+          🎉
+        </div>
+        <span className="badge-competition !bg-emerald-500/15 !text-emerald-600 !border-emerald-500/30 mb-2">
+          Pago Aprobado
+        </span>
+        <h1 className="font-black text-2xl sm:text-3xl text-[var(--text-primary)] mb-2">
+          ¡Entradas Listas!
+        </h1>
+        <p className="text-[var(--text-secondary)] text-sm max-w-sm mx-auto">
+          Gracias <strong className="text-[var(--text-primary)]">{data.order.buyer_name}</strong>. Podés guardar o mostrar estos códigos QR directamente desde tu celular en el molinete.
         </p>
         {data.order.status === 'approved' && (
-          <p className="text-xs text-gray-dark mt-2">
-            También las enviamos a {data.order.buyer_email}
+          <p className="text-xs text-[var(--text-muted)] mt-2 font-medium">
+            📩 Copia de respaldo enviada a <strong>{data.order.buyer_email}</strong>
           </p>
         )}
       </div>
 
-      {/* Tickets */}
+      {/* Tickets List */}
       <div className="space-y-6">
         {data.tickets.map((ticket) => (
           <TicketDisplay key={ticket.id} ticket={ticket} />
         ))}
       </div>
 
-      {/* Actions */}
+      {/* Navigation actions */}
       <div className="mt-8 space-y-3">
         <Link href="/mis-entradas" className="btn-secondary">
-          Ver todas mis entradas
+          Guardar / Ver todas mis entradas
         </Link>
-        <Link href="/" className="btn-secondary">
-          Volver al inicio
+        <Link href="/" className="btn-pill !w-full !justify-center !py-3">
+          Volver a la cartelera de partidos
         </Link>
       </div>
 
-      {/* Club hashtags */}
-      <div className="text-center mt-8 text-sm font-bold text-red-shield tracking-wider">
-        #SomosTalleres #SomosFamilia
+      {/* Club Hashtags */}
+      <div className="text-center mt-8 text-xs font-black text-rose-500 tracking-widest uppercase">
+        #SomosTalleres · #ElMatador
       </div>
     </div>
   );

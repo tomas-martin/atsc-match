@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import ClubShield from '@/components/ClubShield';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -62,11 +63,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link href="/admin" className="flex items-center gap-2">
             <ClubShield size={28} />
-            <span className="font-bold text-sm">ADMIN</span>
+            <span className="font-bold text-sm">ADMIN TALLERES</span>
           </Link>
-          <Link href="/" className="text-xs text-gray-blue hover:text-white transition-colors">
-            Ver sitio →
-          </Link>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Link href="/" className="text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
+              Ver sitio →
+            </Link>
+          </div>
         </div>
       </header>
 

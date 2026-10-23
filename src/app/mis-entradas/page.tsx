@@ -27,8 +27,8 @@ export default function MisEntradasPage() {
 
   async function handleSearch() {
     const errs: Record<string, string> = {};
-    if (!isValidEmail(email)) errs.email = 'Email inválido';
-    if (!isValidDNI(sanitizeDNI(dni))) errs.dni = 'DNI inválido';
+    if (!isValidEmail(email)) errs.email = 'Ingresá un email válido';
+    if (!isValidDNI(sanitizeDNI(dni))) errs.dni = 'Ingresá un DNI válido (7 u 8 dígitos)';
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
@@ -78,7 +78,7 @@ export default function MisEntradasPage() {
           // Ignore
         }
       }
-      setErrors({ general: 'Error de conexión' });
+      setErrors({ general: 'Error de conexión. Intentá de nuevo.' });
     }
     setLoading(false);
   }
@@ -86,83 +86,108 @@ export default function MisEntradasPage() {
   return (
     <>
       <Header />
-      <main className="flex-1 px-4 py-6 max-w-lg mx-auto w-full">
+      <main className="flex-1 px-4 py-8 max-w-xl mx-auto w-full">
         <div className="animate-fade-in-up">
-          <h1 className="font-black text-2xl mb-1">Mis Entradas</h1>
-          <p className="text-gray-blue text-sm mb-6">
-            Buscá tus entradas con el email y DNI de la compra
-          </p>
+          <div className="text-center mb-6">
+            <span className="badge-competition mb-2">
+              🎫 Portal de Entradas
+            </span>
+            <h1 className="font-black text-2xl sm:text-3xl tracking-tight text-[var(--text-primary)]">
+              Mis Entradas
+            </h1>
+            <p className="text-[var(--text-secondary)] text-sm max-w-xs mx-auto mt-1">
+              Ingresá el email y DNI que usaste al comprar para ver y descargar tus pases QR.
+            </p>
+          </div>
 
-          <div className="space-y-4 mb-6">
-            <div>
-              <label htmlFor="search-email" className="input-label">Email</label>
-              <input
-                id="search-email"
-                type="email"
-                className={`input-field ${errors.email ? 'error' : ''}`}
-                placeholder="tu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              {errors.email && <p className="input-error">{errors.email}</p>}
-            </div>
-
-            <div>
-              <label htmlFor="search-dni" className="input-label">DNI</label>
-              <input
-                id="search-dni"
-                type="text"
-                inputMode="numeric"
-                className={`input-field ${errors.dni ? 'error' : ''}`}
-                placeholder="12345678"
-                value={dni}
-                onChange={(e) => setDni(e.target.value)}
-              />
-              {errors.dni && <p className="input-error">{errors.dni}</p>}
-            </div>
-
-            {errors.general && (
-              <div className="bg-red-shield/10 border border-red-shield/30 rounded-xl p-3 text-sm text-red-shield">
-                {errors.general}
+          <div className="bg-[var(--bg-surface)] border border-[var(--border-card)] rounded-2xl p-6 mb-8 shadow-sm">
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="search-email" className="input-label">
+                  Email de compra
+                </label>
+                <input
+                  id="search-email"
+                  type="email"
+                  className={`input-field ${errors.email ? 'error' : ''}`}
+                  placeholder="ejemplo@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                {errors.email && <p className="input-error">{errors.email}</p>}
               </div>
-            )}
 
-            <button
-              className="btn-primary"
-              onClick={handleSearch}
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <div className="spinner" />
-                  Buscando...
-                </>
-              ) : (
-                'Buscar mis entradas'
+              <div>
+                <label htmlFor="search-dni" className="input-label">
+                  DNI del titular
+                </label>
+                <input
+                  id="search-dni"
+                  type="text"
+                  inputMode="numeric"
+                  className={`input-field ${errors.dni ? 'error' : ''}`}
+                  placeholder="12345678"
+                  value={dni}
+                  onChange={(e) => setDni(e.target.value)}
+                />
+                {errors.dni && <p className="input-error">{errors.dni}</p>}
+              </div>
+
+              {errors.general && (
+                <div className="bg-rose-500/10 border border-rose-500/30 rounded-xl p-3 text-xs font-bold text-rose-500">
+                  {errors.general}
+                </div>
               )}
-            </button>
+
+              <button
+                className="btn-primary"
+                onClick={handleSearch}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <div className="spinner" />
+                    <span>Buscando entradas...</span>
+                  </>
+                ) : (
+                  <span>Buscar mis entradas</span>
+                )}
+              </button>
+            </div>
           </div>
 
           {searched && tickets.length === 0 && (
-            <div className="text-center py-12">
-              <div className="text-4xl mb-3">🎫</div>
-              <p className="font-bold text-lg mb-1">No encontramos entradas</p>
-              <p className="text-gray-blue text-sm">
-                Verificá que el email y DNI sean los de la compra
+            <div className="text-center py-12 px-4 bg-[var(--bg-surface)] rounded-2xl border border-[var(--border-card)] animate-fade-in-up">
+              <div className="text-4xl mb-3">🔍</div>
+              <h3 className="font-black text-lg mb-1 text-[var(--text-primary)]">
+                No encontramos entradas
+              </h3>
+              <p className="text-[var(--text-secondary)] text-sm max-w-xs mx-auto">
+                Verificá que el email y el DNI coincidan exactamente con los ingresados al pagar.
               </p>
             </div>
           )}
 
           {tickets.length > 0 && (
-            <div className="space-y-6">
-              <p className="text-sm text-gray-blue">
-                {tickets.length} entrada{tickets.length > 1 ? 's' : ''} encontrada{tickets.length > 1 ? 's' : ''}
-              </p>
+            <div className="space-y-6 animate-fade-in-up">
+              <div className="flex items-center justify-between px-1">
+                <span className="text-sm font-bold text-[var(--text-primary)]">
+                  {tickets.length} entrada{tickets.length > 1 ? 's' : ''} disponible{tickets.length > 1 ? 's' : ''}
+                </span>
+                <span className="text-xs text-[var(--text-muted)] font-medium">
+                  Mostrá el QR en el molinete
+                </span>
+              </div>
+
               {tickets.map((ticket) => (
-                <div key={ticket.id} className={ticket.isUsed ? 'opacity-50' : ''}>
+                <div
+                  key={ticket.id}
+                  className={`transition-opacity ${ticket.isUsed ? 'opacity-60' : ''}`}
+                >
                   {ticket.isUsed && (
-                    <div className="text-xs font-bold text-yellow-warn mb-2 uppercase tracking-wider">
-                      ✓ Ya utilizada
+                    <div className="text-xs font-bold text-amber-500 mb-2 uppercase tracking-wider flex items-center gap-1.5 px-2">
+                      <span>✓</span>
+                      <span>Esta entrada ya fue escaneada en el acceso</span>
                     </div>
                   )}
                   <TicketDisplay ticket={ticket} />

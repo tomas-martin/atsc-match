@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
+import ClubShield from './ClubShield';
 
 interface TicketDisplayProps {
   ticket: {
@@ -22,9 +23,9 @@ export default function TicketDisplay({ ticket }: TicketDisplayProps) {
   useEffect(() => {
     if (canvasRef.current) {
       QRCode.toCanvas(canvasRef.current, ticket.token, {
-        width: 180,
+        width: 190,
         margin: 2,
-        color: { dark: '#0A1230', light: '#FFFFFF' },
+        color: { dark: '#070B19', light: '#FFFFFF' },
       }).then(() => setReady(true));
     }
   }, [ticket.token]);
@@ -42,27 +43,58 @@ export default function TicketDisplay({ ticket }: TicketDisplayProps) {
   });
 
   return (
-    <div className="ticket-display shadow-xl">
-      <div className="ticket-display-header">
-        <div className="text-[10px] tracking-[0.2em] font-semibold opacity-70 mb-1">
-          ANDES TALLERES FUTSAL
+    <div className="ticket-display relative overflow-hidden">
+      {/* Header */}
+      <div className="ticket-display-header relative">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <ClubShield size={28} glow />
+          <span className="text-[10px] tracking-[0.25em] font-extrabold text-white/80 uppercase">
+            Andes Talleres Futsal
+          </span>
         </div>
-        <div className="font-extrabold text-lg">vs {ticket.matchRival}</div>
-        <div className="text-sm mt-1 opacity-90 capitalize">{dateStr} · {timeStr} hs</div>
-        <div className="text-xs mt-1 opacity-70">{ticket.matchVenue}</div>
+
+        <h3 className="font-black text-xl text-white">
+          vs {ticket.matchRival}
+        </h3>
+
+        <div className="text-xs font-semibold mt-1 text-white/90 capitalize">
+          {dateStr} · {timeStr} hs
+        </div>
+        <div className="text-[11px] mt-0.5 text-white/70 font-medium">
+          📍 {ticket.matchVenue}
+        </div>
       </div>
 
+      {/* Ticket body */}
       <div className="ticket-display-body">
-        <div className="text-xs font-bold text-gray-dark uppercase tracking-widest">
-          {ticket.typeName}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-xs font-extrabold uppercase tracking-wider">
+          <span>Sector:</span>
+          <span>{ticket.typeName}</span>
         </div>
-        <div className="ticket-display-qr">
+
+        {/* QR Code Container */}
+        <div className="ticket-display-qr shadow-sm">
           <canvas
             ref={canvasRef}
-            className={`transition-opacity duration-300 ${ready ? 'opacity-100' : 'opacity-0'}`}
+            className={`transition-opacity duration-300 ${
+              ready ? 'opacity-100' : 'opacity-0'
+            }`}
           />
         </div>
-        <div className="ticket-display-code">{ticket.code}</div>
+
+        {/* Alpha-numeric fallback code */}
+        <div className="text-center">
+          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">
+            Código de Entrada
+          </div>
+          <div className="ticket-display-code">
+            {ticket.code}
+          </div>
+        </div>
+
+        <div className="text-[11px] text-slate-500 font-medium text-center max-w-[220px]">
+          Presentá este código en el acceso al polideportivo. Entrada válida por 1 ingreso.
+        </div>
       </div>
     </div>
   );

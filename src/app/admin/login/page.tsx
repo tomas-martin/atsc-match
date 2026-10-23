@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ClubShield from '@/components/ClubShield';
+import ThemeToggle from '@/components/ThemeToggle';
+import Link from 'next/link';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -38,12 +40,19 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-dvh flex items-center justify-center px-4">
+    <div className="min-h-dvh flex flex-col items-center justify-center px-4 relative">
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        <ThemeToggle />
+        <Link href="/" className="text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors px-2.5 py-1.5 rounded-lg border border-[var(--border-subtle)]">
+          ← Volver
+        </Link>
+      </div>
+
       <div className="w-full max-w-sm">
         <div className="text-center mb-8 animate-fade-in-up">
-          <ClubShield size={64} className="mx-auto mb-4" />
-          <h1 className="font-black text-xl">Panel de Administración</h1>
-          <p className="text-gray-blue text-sm mt-1">Andes Talleres Futsal</p>
+          <ClubShield size={72} glow className="mx-auto mb-4" />
+          <h1 className="font-black text-xl text-[var(--text-primary)]">Panel de Administración</h1>
+          <p className="text-[var(--text-secondary)] text-sm mt-1">Andes Talleres Futsal</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
